@@ -139,6 +139,20 @@ tenuErrorStatus ADC_enuChangeChannel(const uint8 u8ChannelCpy)
     return enuErrorStatLoc;
 }
 
+tenuErrorStatus ADC_enuChangeVoltRef(const uint8 u8RefVoltageCpy)
+{
+    tenuErrorStatus enuErrorStatLoc = E_OK;
+    if(u8RefVoltageCpy>ADC_REFERENCE_VOLTAGE_256)
+    {
+        enuErrorStatLoc = E_NOK_PARAMETER_OUT_OF_RANGE;
+    }
+    else
+    {
+    	ADMUX = (ADMUX & ADMUX_REFS01_MASK) | (u8RefVoltageCpy<<ADMUX_BIT_REFS0);
+    }
+    return enuErrorStatLoc;
+}
+
 void ADC_voidInterruptEnable(void)
 {
     SET_BIT(ADCSRA, ADCSRA_BIT_ADIE);

@@ -199,7 +199,7 @@ static void APP_voidTimerSubDisplay2(void)
 {
 	CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
 	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Timer -> Light:");
+	CLCD_enuWriteString("Timer->Light:");
 	CLCD_enuGotoxy(1,14);
 	CLCD_enuWriteChar(0);
 	CLCD_enuWriteChar(3);
@@ -208,7 +208,7 @@ static void APP_voidTimerSubDisplay2(void)
 static void APP_voidTimerSubDisplay3(void)
 {
 	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Light -> Fan:");
+	CLCD_enuWriteString("Light->Fan:");
 	CLCD_enuGotoxy(1,14);
 	CLCD_enuWriteChar(0);
 	CLCD_enuWriteChar(3);
@@ -217,7 +217,7 @@ static void APP_voidTimerSubDisplay3(void)
 static void APP_voidTimerSubDisplay4(void)
 {
 	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Timer -> Buzzer:");
+	CLCD_enuWriteString("Timer->Buzzer:");
 	CLCD_enuGotoxy(1,14);
 	CLCD_enuWriteChar(0);
 	CLCD_enuWriteChar(3);
@@ -247,7 +247,7 @@ static void APP_voidFanSubDisplay2(void)
 {
 	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
 	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Fan -> ON");
+	CLCD_enuWriteString("Fan->ON");
 	CLCD_enuGotoxy(1,0);
 	CLCD_enuWriteString("if T > 20");
 	CLCD_enuGotoxy(1,14);
@@ -281,7 +281,7 @@ static void APP_voidLedSubDisplay2(void)
 {
 	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
 	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Light -> OFF");
+	CLCD_enuWriteString("Light->OFF");
 	CLCD_enuGotoxy(1,0);
 	CLCD_enuWriteString("if L > 20");
 	CLCD_enuGotoxy(1,9);

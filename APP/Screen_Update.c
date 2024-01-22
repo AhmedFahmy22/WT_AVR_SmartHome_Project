@@ -172,10 +172,10 @@ void APP_voidScreenUpdate(void)
 static void APP_voidStatusMainDispUpdate(void)
 {
 	CLCD_enuGotoxy(1,5);
-	CLCD_enuWriteNum(((uint32)u16Adc0ReadGlb*256/1023));
+	CLCD_enuWriteNum(u8CurrentTempGlb);
 	CLCD_enuWriteChar(' ');
 	CLCD_enuGotoxy(1,13);
-	CLCD_enuWriteNum(((uint32)u16Adc1ReadGlb*256/1023));
+	CLCD_enuWriteNum(u8CurrentLightGlb);
 	CLCD_enuWriteChar('%');
 	CLCD_enuWriteChar(' ');
 }

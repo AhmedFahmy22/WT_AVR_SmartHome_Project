@@ -121,6 +121,7 @@ void APP_voidInit(void)
 		EXTEEPROM_enuRead(0x52,(uint8*)(&u16CurrentPinGlb)+1);
 	}
 
+
 	/*Get and check PIN from user*/
 	APP_voidPinCheck(u16CurrentPinGlb);
 
@@ -145,11 +146,13 @@ void APP_voidStart(void)
 
 			if(u8AdcFlagLoc==0) /*Temperature sensor (Channel 0)*/
 			{
+				ADC_enuChangeVoltRef(ADC_REFERENCE_VOLTAGE_256);
 				ADC_enuReadAsynch(ADC_CHANNEL_A0);
 				u8AdcFlagLoc=1;
 			}
 			else if(u8AdcFlagLoc==1) /*Light sensor (Channel 1)*/
 			{
+				ADC_enuChangeVoltRef(ADC_REFERENCE_VOLTAGE_256);
 				ADC_enuReadAsynch(ADC_CHANNEL_A1);
 				u8AdcFlagLoc=0;
 			}
@@ -249,7 +252,7 @@ void APP_voidStart(void)
 			}
 
 			/*Light -> light sensor*/
-			u8CurrentLightGlb = (uint8)((uint32)u16Adc1ReadGlb*256/1023);
+			u8CurrentLightGlb = (uint8)((uint32)u16Adc1ReadGlb*100/1023);
 			if((strSensorOptionsGlb.u8LightUpper!=0)&&((strSensorOptionsGlb.u8LightLower!=0)))
 			{
 				if((strStatesGlb.u8LightState==1)&&(u8CurrentLightGlb>strSensorOptionsGlb.u8LightUpper))

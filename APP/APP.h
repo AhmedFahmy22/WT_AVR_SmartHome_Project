@@ -71,8 +71,8 @@ extern tstrSensorOptions strSensorOptionsGlb;
 
 extern uint16 u16CurrentPinGlb;
 extern uint32 u32Tim0OvfCntrGlb;
-extern uint16 u16Adc0ReadGlb;
-extern uint16 u16Adc1ReadGlb;
+extern uint8 u8CurrentTempGlb;
+extern uint8 u8CurrentLightGlb;
 extern uint16 u16TimerGlb;
 extern tenuMainDisplay enuCurrentMainDisplayGlb;
 extern tenuSubDisplay enuCurrentSubDisplayGlb;
