@@ -3,7 +3,7 @@
 **Smart Home Project**
 **(AVR ATMEGA32)**
 
-![proteus_print_page-0001](https://github.com/AhmedFahmy22/WT_AVR_SmartHome_Project/assets/116200429/87d3e085-ca46-42e3-aba1-2f4f74bcff7d)
+![proteus_print_page-0001](https://github.com/AhmedFahmy22/WT_AVR_SmartHome_Project/assets/116200429/297b7c5e-bd1e-48fa-866c-19b1d081b5a3)
 
 
 **Description**
