@@ -16,17 +16,17 @@
 #define APP_BUTTON_ACTION_H_
 
 /**********Function Declarations**********/
-void APP_voidButtonAction(void);
+tenuErrorStatus APP_enuButtonAction(void);
 
-void APP_voidLightOn(void);
-void APP_voidLightOff(void);
+tenuErrorStatus APP_enuLightOn(void);
+tenuErrorStatus APP_enuLightOff(void);
 
-void APP_voidFanOn(void);
-void APP_voidFanOff(void);
+tenuErrorStatus APP_enuFanOn(void);
+tenuErrorStatus APP_enuFanOff(void);
 
 void APP_voidBuzzerOn(void);
 void APP_voidBuzzerOff(void);
-void APP_voidBuzzerToggle(void);
+tenuErrorStatus APP_enuBuzzerToggle(void);
 /****************************************/
 
 #endif /* APP_BUTTON_ACTION_H_ */

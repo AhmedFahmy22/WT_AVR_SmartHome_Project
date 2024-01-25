@@ -44,8 +44,8 @@ typedef struct {
 	uint8 u8Button3Flag 	 :1;
 	uint8 u8UpdateFlag		 :1;
 	uint8 u8TimedUpdateFlag	 :1;
-	uint8 u8AdcStartFlag	 :1;
 	uint8 u8TimerResetFlag	 :1;
+	uint8 u8AdcChannelFlag	 :1;
 }tstrFlags;
 
 typedef struct {

@@ -45,8 +45,12 @@ static void APP_voidServoSub1DispUpdate(void);
 static void APP_voidPinSubDispUpdate(void);
 /****************************************/
 
+/************Global Variables***********/
+static tenuErrorStatus enuErrorStatGlb = E_OK;
+/****************************************/
+
 /**********Functions Definitions**********/
-void APP_voidScreenUpdate(void)
+tenuErrorStatus APP_enuScreenUpdate(void)
 {
 	if((enuCurrentMainDisplayGlb==APP_DISPLAY_STATUS)&&(strFlagsGlb.u8UpdateFlag==0)) /*Status main display update*/
 	{
@@ -167,26 +171,28 @@ void APP_voidScreenUpdate(void)
 	{
 
 	}
+
+	return enuErrorStatGlb;
 }
 
 static void APP_voidStatusMainDispUpdate(void)
 {
-	CLCD_enuGotoxy(1,5);
-	CLCD_enuWriteNum(u8CurrentTempGlb);
-	CLCD_enuWriteChar(' ');
-	CLCD_enuGotoxy(1,13);
-	CLCD_enuWriteNum(u8CurrentLightGlb);
-	CLCD_enuWriteChar('%');
-	CLCD_enuWriteChar(' ');
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,5);
+	enuErrorStatGlb |= CLCD_enuWriteNum(u8CurrentTempGlb);
+	enuErrorStatGlb |= CLCD_enuWriteChar(' ');
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,13);
+	enuErrorStatGlb |= CLCD_enuWriteNum(u8CurrentLightGlb);
+	enuErrorStatGlb |= CLCD_enuWriteChar('%');
+	enuErrorStatGlb |= CLCD_enuWriteChar(' ');
 }
 
 void APP_voidDisplayTime(uint16 u16TimeCpy)
 {
-	CLCD_enuWriteChar((u16TimeCpy/600) +'0');
-	CLCD_enuWriteChar((u16TimeCpy/60)%10 +'0');
-	CLCD_enuWriteChar(':');
-	CLCD_enuWriteChar((u16TimeCpy%60)/10 +'0');
-	CLCD_enuWriteChar((u16TimeCpy%60)%10 +'0');
+	enuErrorStatGlb |= CLCD_enuWriteChar((u16TimeCpy/600) +'0');
+	enuErrorStatGlb |= CLCD_enuWriteChar((u16TimeCpy/60)%10 +'0');
+	enuErrorStatGlb |= CLCD_enuWriteChar(':');
+	enuErrorStatGlb |= CLCD_enuWriteChar((u16TimeCpy%60)/10 +'0');
+	enuErrorStatGlb |= CLCD_enuWriteChar((u16TimeCpy%60)%10 +'0');
 }
 
 static void APP_voidTimerSub1DispUpdate(void)
@@ -201,24 +207,24 @@ static void APP_voidTimerSub1DispUpdate(void)
 	{
 		u8LocationLoc = 2+u8InputNumGlb;
 	}
-	CLCD_enuGotoxy(1,u8LocationLoc);
-	CLCD_enuWriteNum(u8ChoiceGlb);
-	CLCD_enuGotoxy(1,u8LocationLoc);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocationLoc);
+	enuErrorStatGlb |= CLCD_enuWriteNum(u8ChoiceGlb);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocationLoc);
 }
 
 static void APP_voidTimerSub2DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
 	switch(u8ChoiceGlb)
 	{
 	case 0:
-		CLCD_enuWriteString("ON  ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON  ");
 		break;
 	case 1:
-		CLCD_enuWriteString("OFF ");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF ");
 		break;
 	case 2:
-		CLCD_enuWriteString("Skip");
+		enuErrorStatGlb |= CLCD_enuWriteString("Skip");
 		break;
 	default:
 		break;
@@ -227,17 +233,17 @@ static void APP_voidTimerSub2DispUpdate(void)
 
 static void APP_voidTimerSub3DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
 	switch(u8ChoiceGlb)
 	{
 	case 0:
-		CLCD_enuWriteString("ON  ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON  ");
 		break;
 	case 1:
-		CLCD_enuWriteString("OFF ");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF ");
 		break;
 	case 2:
-		CLCD_enuWriteString("Skip");
+		enuErrorStatGlb |= CLCD_enuWriteString("Skip");
 		break;
 	default:
 		break;
@@ -246,14 +252,14 @@ static void APP_voidTimerSub3DispUpdate(void)
 
 static void APP_voidTimerSub4DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
 	switch(u8ChoiceGlb)
 	{
 	case 0:
-		CLCD_enuWriteString("ON  ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON  ");
 		break;
 	case 1:
-		CLCD_enuWriteString("OFF ");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF ");
 		break;
 	default:
 		break;
@@ -263,33 +269,33 @@ static void APP_voidTimerSub4DispUpdate(void)
 static void APP_voidFanMainDispUpdate(void)
 {
 
-	CLCD_enuGotoxy(1,7);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,7);
 	if(strStatesGlb.u8FanState==0)
 	{
-		CLCD_enuWriteString("OFF");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF");
 	}
 	else
 	{
-		CLCD_enuWriteString("ON ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON ");
 	}
 }
 
 static void APP_voidFanSub1DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
 	switch(u8ChoiceGlb)
 	{
 	case 0:
-		CLCD_enuWriteString("ON    ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON    ");
 		break;
 	case 1:
-		CLCD_enuWriteString("OFF   ");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF   ");
 		break;
 	case 2:
-		CLCD_enuWriteString("Sensor");
+		enuErrorStatGlb |= CLCD_enuWriteString("Sensor");
 		break;
 	case 3:
-		CLCD_enuWriteString("Cancel");
+		enuErrorStatGlb |= CLCD_enuWriteString("Cancel");
 		break;
 	default:
 		break;
@@ -316,49 +322,49 @@ static void APP_voidFanSub2DispUpdate(void)
 	if((u8InputNumGlb==2)&&(u8EntryLoc==0)) /*user entered 1st limit -> update display to get 2nd limit*/
 	{
 		u8EntryLoc=1;
-		CLCD_enuGotoxy(0,5);
-		CLCD_enuWriteString("OFF:");
-		CLCD_enuGotoxy(1,5);
-		CLCD_enuWriteString("< 10");
+		enuErrorStatGlb |= CLCD_enuGotoxy(0,5);
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF:");
+		enuErrorStatGlb |= CLCD_enuGotoxy(1,5);
+		enuErrorStatGlb |= CLCD_enuWriteString("< 10");
 	}
 	else if((u8InputNumGlb==3)&&(u8EntryLoc==1))
 	{
 		u8EntryLoc=0;
 	}
-	CLCD_enuGotoxy(1,u8LocationLoc);
-	CLCD_enuWriteChar('0'+u8ChoiceGlb);
-	CLCD_enuGotoxy(1,u8LocationLoc);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocationLoc);
+	enuErrorStatGlb |= CLCD_enuWriteChar('0'+u8ChoiceGlb);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocationLoc);
 }
 
 static void APP_voidLedMainDispUpdate(void)
 {
-	CLCD_enuGotoxy(1,7);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,7);
 	if(strStatesGlb.u8LightState==0)
 	{
-		CLCD_enuWriteString("OFF");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF");
 	}
 	else
 	{
-		CLCD_enuWriteString("ON ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON ");
 	}
 }
 
 static void APP_voidLedub1DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
 	switch(u8ChoiceGlb)
 	{
 	case 0:
-		CLCD_enuWriteString("ON    ");
+		enuErrorStatGlb |= CLCD_enuWriteString("ON    ");
 		break;
 	case 1:
-		CLCD_enuWriteString("OFF   ");
+		enuErrorStatGlb |= CLCD_enuWriteString("OFF   ");
 		break;
 	case 2:
-		CLCD_enuWriteString("Sensor");
+		enuErrorStatGlb |= CLCD_enuWriteString("Sensor");
 		break;
 	case 3:
-		CLCD_enuWriteString("Cancel");
+		enuErrorStatGlb |= CLCD_enuWriteString("Cancel");
 		break;
 	}
 }
@@ -383,38 +389,38 @@ static void APP_voidLedub2DispUpdate(void)
 	if((u8InputNumGlb==2)&&(u8EntryLoc==0)) /*user entered 1st limit -> update display to get 2nd limit*/
 	{
 		u8EntryLoc=1;
-		CLCD_enuGotoxy(0,7);
-		CLCD_enuWriteString("ON: ");
-		CLCD_enuGotoxy(1,5);
-		CLCD_enuWriteString("< 10");
+		enuErrorStatGlb |= CLCD_enuGotoxy(0,7);
+		enuErrorStatGlb |= CLCD_enuWriteString("ON: ");
+		enuErrorStatGlb |= CLCD_enuGotoxy(1,5);
+		enuErrorStatGlb |= CLCD_enuWriteString("< 10");
 	}
 	else if((u8InputNumGlb==3)&&(u8EntryLoc==1))
 	{
 		u8EntryLoc=0;
 	}
-	CLCD_enuGotoxy(1,u8LocatioLoc);
-	CLCD_enuWriteChar('0'+u8ChoiceGlb);
-	CLCD_enuGotoxy(1,u8LocatioLoc);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocatioLoc);
+	enuErrorStatGlb |= CLCD_enuWriteChar('0'+u8ChoiceGlb);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,u8LocatioLoc);
 }
 
 static void APP_voidServoMainDispUpdate(void)
 {
-	CLCD_enuGotoxy(1,7);
-	CLCD_enuWriteNum(strStatesGlb.u8ServoState);
-	CLCD_enuWriteString("  ");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,7);
+	enuErrorStatGlb |= CLCD_enuWriteNum(strStatesGlb.u8ServoState);
+	enuErrorStatGlb |= CLCD_enuWriteString("  ");
 }
 
 static void APP_voidServoSub1DispUpdate(void)
 {
-	CLCD_enuGotoxy(1,1+u8InputNumGlb);
-	CLCD_enuWriteChar(u8ChoiceGlb+'0');
-	CLCD_enuGotoxy(1,1+u8InputNumGlb);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1+u8InputNumGlb);
+	enuErrorStatGlb |= CLCD_enuWriteChar(u8ChoiceGlb+'0');
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1+u8InputNumGlb);
 }
 
 static void APP_voidPinSubDispUpdate(void)
 {
-	CLCD_enuGotoxy(1,1+u8InputNumGlb);
-	CLCD_enuWriteChar(u8ChoiceGlb+'0');
-	CLCD_enuGotoxy(1,1+u8InputNumGlb);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1+u8InputNumGlb);
+	enuErrorStatGlb |= CLCD_enuWriteChar(u8ChoiceGlb+'0');
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1+u8InputNumGlb);
 }
 /****************************************/

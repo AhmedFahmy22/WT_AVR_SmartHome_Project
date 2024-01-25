@@ -16,7 +16,7 @@
 #define APP_SCREEN_SWITCH_H_
 
 /**********Function Declarations**********/
-void APP_voidScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuSubDisplayCpy);
+tenuErrorStatus APP_enuScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuSubDisplayCpy);
 /****************************************/
 
 #endif /* APP_SCREEN_SWITCH_H_ */

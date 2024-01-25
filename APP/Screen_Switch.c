@@ -49,8 +49,12 @@ static void APP_voidPinChangeSubDisplay2(void);
 static void APP_voidPinChangeSubDisplay3(void);
 /****************************************/
 
+/************Global Variables***********/
+static tenuErrorStatus enuErrorStatGlb = E_OK;
+/****************************************/
+
 /**********Functions Definitions**********/
-void APP_voidScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuSubDisplayCpy)
+tenuErrorStatus APP_enuScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuSubDisplayCpy)
 {
 	if(enuSubDisplayCpy==APP_SUB_DISPLAY_NA)
 	{
@@ -62,8 +66,8 @@ void APP_voidScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuS
 	}
 	else if(enuSubDisplayCpy==APP_SUB_DISPLAY_MAIN) /*for main screen*/
 	{
-		CLCD_enuSendCommand(CLCD_COMM_CLEAR);
-		CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
+		enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CLEAR);
+		enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
 		switch(enuMainDisplayCpy)
 		{
 		case APP_DISPLAY_STATUS:
@@ -90,7 +94,7 @@ void APP_voidScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuS
 	}
 	else /*for sub-screen*/
 	{
-		CLCD_enuSendCommand(CLCD_COMM_CLEAR);
+		enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CLEAR);
 		switch(enuMainDisplayCpy)
 		{
 		case APP_DISPLAY_TIMER:
@@ -159,203 +163,205 @@ void APP_voidScreenSwitch(tenuMainDisplay enuMainDisplayCpy, tenuSubDisplay enuS
 	/*Update Current Display*/
 	enuCurrentMainDisplayGlb = enuMainDisplayCpy;
 	enuCurrentSubDisplayGlb = enuSubDisplayCpy;
+
+	return enuErrorStatGlb;
 }
 
 static void APP_voidStatusMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[Status]");
-	CLCD_enuGotoxy(1,1);
-	CLCD_enuWriteString("T = ");
-	CLCD_enuGotoxy(1,9);
-	CLCD_enuWriteString("L = ");
-	CLCD_enuWriteChar('%');
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(2);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[Status]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1);
+	enuErrorStatGlb |= CLCD_enuWriteString("T = ");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,9);
+	enuErrorStatGlb |= CLCD_enuWriteString("L = ");
+	enuErrorStatGlb |= CLCD_enuWriteChar('%');
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(2);
 }
 
 static void APP_voidTimerMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[Timer]");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[Timer]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidTimerSubDisplay1(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Timer Setting:");
-	CLCD_enuGotoxy(1,2);
-	CLCD_enuWriteString("00:00");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Timer Setting:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,2);
+	enuErrorStatGlb |= CLCD_enuWriteString("00:00");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidTimerSubDisplay2(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Timer->Light:");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Timer->Light:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidTimerSubDisplay3(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Light->Fan:");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Light->Fan:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidTimerSubDisplay4(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Timer->Buzzer:");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Timer->Buzzer:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidFanMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[Fan]");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
-	CLCD_enuGotoxy(1,0);
-	CLCD_enuWriteString("State: ");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[Fan]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("State: ");
 }
 
 static void APP_voidFanSubDisplay1(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Fan Setting:");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Fan Setting:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidFanSubDisplay2(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Fan->ON");
-	CLCD_enuGotoxy(1,0);
-	CLCD_enuWriteString("if T > 20");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Fan->ON");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("if T > 20");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidLedMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[Light]");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
-	CLCD_enuGotoxy(1,0);
-	CLCD_enuWriteString("State: ");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[Light]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("State: ");
 }
 
 static void APP_voidLedSubDisplay1(void)
 {
 
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Light Setting:");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Light Setting:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 
 }
 
 static void APP_voidLedSubDisplay2(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Light->OFF");
-	CLCD_enuGotoxy(1,0);
-	CLCD_enuWriteString("if L > 20");
-	CLCD_enuGotoxy(1,9);
-	CLCD_enuWriteChar('%');
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Light->OFF");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("if L > 20");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,9);
+	enuErrorStatGlb |= CLCD_enuWriteChar('%');
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidServoMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[Servo]");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
-	CLCD_enuGotoxy(1,0);
-	CLCD_enuWriteString("Angle: ");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[Servo]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Angle: ");
 }
 
 static void APP_voidServoSubDisplay1(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Servo Setting:");
-	CLCD_enuGotoxy(1,1);
-	CLCD_enuWriteString("000");
-	CLCD_enuGotoxy(1,14);
-	CLCD_enuWriteChar(0);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Servo Setting:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1);
+	enuErrorStatGlb |= CLCD_enuWriteString("000");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(0);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 
 }
 
 static void APP_voidPinChangeMainDisplay(void)
 {
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("[PIN-Change]");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(1);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("[PIN-Change]");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(1);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 
 static void APP_voidPinChangeSubDisplay1(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Current PIN:");
-	CLCD_enuGotoxy(1,1);
-	CLCD_enuWriteString("0000");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(1);
-	CLCD_enuWriteChar(3);
-	CLCD_enuGotoxy(0,1);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Current PIN:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1);
+	enuErrorStatGlb |= CLCD_enuWriteString("0000");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(1);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,1);
 }
 
 static void APP_voidPinChangeSubDisplay2(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("New PIN:");
-	CLCD_enuGotoxy(1,1);
-	CLCD_enuWriteString("0000");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(1);
-	CLCD_enuWriteChar(3);
-	CLCD_enuGotoxy(0,1);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_ON);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("New PIN:");
+	enuErrorStatGlb |= CLCD_enuGotoxy(1,1);
+	enuErrorStatGlb |= CLCD_enuWriteString("0000");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(1);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,1);
 }
 
 static void APP_voidPinChangeSubDisplay3(void)
 {
-	CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
-	CLCD_enuGotoxy(0,0);
-	CLCD_enuWriteString("Wrong Pin");
-	CLCD_enuGotoxy(0,14);
-	CLCD_enuWriteChar(3);
+	enuErrorStatGlb |= CLCD_enuSendCommand(CLCD_COMM_CURSOR_OFF);
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,0);
+	enuErrorStatGlb |= CLCD_enuWriteString("Wrong Pin");
+	enuErrorStatGlb |= CLCD_enuGotoxy(0,14);
+	enuErrorStatGlb |= CLCD_enuWriteChar(3);
 }
 /****************************************/

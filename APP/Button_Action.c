@@ -8,8 +8,8 @@
 
 /**************Description**************/
 /*
-*  Contains the functions that take action according to user input
-*/
+ *  Contains the functions that take action according to user input
+ */
 /***************************************/
 
 /****************Includes****************/
@@ -46,8 +46,12 @@ static void APP_voidServoSub1(uint8 u8ButtonNumCpy);
 static void APP_voidPinChangeSubUpdate(uint8 u8ButtonNumCpy);
 /****************************************/
 
+/************Global Variables***********/
+static tenuErrorStatus enuErrorStatGlb = E_OK;
+/****************************************/
+
 /**********Functions Definitions**********/
-void APP_voidButtonAction(void)
+tenuErrorStatus APP_enuButtonAction(void)
 {
 	tenuSubDisplay enuCurrentSubDisplayLoc = enuCurrentSubDisplayGlb;
 	if(strFlagsGlb.u8Button1Flag==1) /*UP Button Pressed*/
@@ -56,14 +60,14 @@ void APP_voidButtonAction(void)
 
 		if(enuCurrentMainDisplayGlb==APP_DISPLAY_STATUS)/*UP button for status screen (go to last screen -> Pin Change)*/
 		{
-			APP_voidScreenSwitch(APP_DISPLAY_PIN_CHANGE,APP_SUB_DISPLAY_MAIN);
+			enuErrorStatGlb |= APP_enuScreenSwitch(APP_DISPLAY_PIN_CHANGE,APP_SUB_DISPLAY_MAIN);
 		}
 		else
 		{
 			if(enuCurrentSubDisplayGlb==APP_SUB_DISPLAY_MAIN)/*If current screen is a main screen*/
 			{
 				/*Go to previous main screen*/
-				APP_voidScreenSwitch(enuCurrentMainDisplayGlb-1,APP_SUB_DISPLAY_MAIN);
+				enuErrorStatGlb |= APP_enuScreenSwitch(enuCurrentMainDisplayGlb-1,APP_SUB_DISPLAY_MAIN);
 			}
 			else /*for sub screen -> run the corresponding sub-update function*/
 			{
@@ -95,14 +99,14 @@ void APP_voidButtonAction(void)
 		strFlagsGlb.u8Button2Flag=0;
 		if((enuCurrentMainDisplayGlb==APP_DISPLAY_PIN_CHANGE)&&(enuCurrentSubDisplayLoc==APP_SUB_DISPLAY_MAIN))/*Down button for PIN-Change screen (go to first screen -> Status)*/
 		{
-			APP_voidScreenSwitch(APP_DISPLAY_STATUS,APP_SUB_DISPLAY_MAIN);
+			enuErrorStatGlb |= APP_enuScreenSwitch(APP_DISPLAY_STATUS,APP_SUB_DISPLAY_MAIN);
 		}
 		else
 		{
 			if(enuCurrentSubDisplayGlb==APP_SUB_DISPLAY_MAIN)/*If current screen is a main screen*/
 			{
 				/*Go to next main screen*/
-				APP_voidScreenSwitch(enuCurrentMainDisplayGlb+1,APP_SUB_DISPLAY_MAIN);
+				enuErrorStatGlb |= APP_enuScreenSwitch(enuCurrentMainDisplayGlb+1,APP_SUB_DISPLAY_MAIN);
 			}
 			else
 			{
@@ -136,7 +140,7 @@ void APP_voidButtonAction(void)
 		{
 			if(enuCurrentSubDisplayGlb==APP_SUB_DISPLAY_MAIN)/*current display is main display -> go to next sub display*/
 			{
-				APP_voidScreenSwitch(enuCurrentMainDisplayGlb, enuCurrentSubDisplayLoc+1);
+				enuErrorStatGlb |= APP_enuScreenSwitch(enuCurrentMainDisplayGlb, enuCurrentSubDisplayLoc+1);
 			}
 			else
 			{
@@ -165,7 +169,7 @@ void APP_voidButtonAction(void)
 				{
 					enuCurrentSubDisplayLoc = enuCurrentSubDisplayGlb;
 					enuCurrentSubDisplayGlb = APP_SUB_DISPLAY_NA;
-					APP_voidScreenSwitch(enuCurrentMainDisplayGlb, enuCurrentSubDisplayLoc);
+					enuErrorStatGlb |= APP_enuScreenSwitch(enuCurrentMainDisplayGlb, enuCurrentSubDisplayLoc);
 				}
 			}
 		}
@@ -178,6 +182,8 @@ void APP_voidButtonAction(void)
 	{
 		strFlagsGlb.u8UpdateFlag=0;
 	}
+
+	return enuErrorStatGlb;
 }
 
 static void APP_voidTimerSubUpdate(uint8 u8ButtonNumCpy)
@@ -486,7 +492,7 @@ static void APP_voidFanSub1(uint8 u8ButtonNumCpy)
 	case 2:
 		if(u8ChoiceGlb==0) /*choice 0 (On) -> turn fan on*/
 		{
-			APP_voidFanOn();
+			APP_enuFanOn();
 
 			/*Disable fan -> sensor by setting lower limit to 0*/
 			strSensorOptionsGlb.u8TimpLower=0;
@@ -496,7 +502,7 @@ static void APP_voidFanSub1(uint8 u8ButtonNumCpy)
 		}
 		else if(u8ChoiceGlb==1) /*choice 1 (Off) -> turn fan off*/
 		{
-			APP_voidFanOff();
+			APP_enuFanOff();
 
 			/*Disable fan -> sensor by setting upper limit to 0*/
 			strSensorOptionsGlb.u8TimpUpper=0;
@@ -696,7 +702,7 @@ static void APP_voidLightSub1(uint8 u8ButtonNumCpy)
 	case 2:
 		if(u8ChoiceGlb==0) /*choice 0 (On) -> turn led on*/
 		{
-			APP_voidLightOn();
+			APP_enuLightOn();
 
 			/*Disable light -> sensor by setting upper limit to 0*/
 			strSensorOptionsGlb.u8LightUpper=0;
@@ -706,7 +712,7 @@ static void APP_voidLightSub1(uint8 u8ButtonNumCpy)
 		}
 		else if(u8ChoiceGlb==1) /*choice 1 (Off) -> turn led off*/
 		{
-			APP_voidLightOff();
+			APP_enuLightOff();
 
 			/*Disable light -> sensor by setting lower limit to 0*/
 			strSensorOptionsGlb.u8LightLower=0;
@@ -949,7 +955,7 @@ static void APP_voidServoSub1(uint8 u8ButtonNumCpy)
 
 			/*Update current angle*/
 			strStatesGlb.u8ServoState = u8AngleLoc;
-			SERVO_enuGotoAngle(strStatesGlb.u8ServoState);
+			enuErrorStatGlb |= SERVO_enuGotoAngle(strStatesGlb.u8ServoState);
 
 			/*return to main display*/
 			enuCurrentSubDisplayGlb = APP_SUB_DISPLAY_MAIN;
@@ -1047,8 +1053,8 @@ static void APP_voidPinChangeSubUpdate(uint8 u8ButtonNumCpy)
 					u16CurrentPinGlb=u16PinTempLoc;
 
 					/*send to EEPROM*/
-					EXTEEPROM_enuWrite(0x51,(uint8)u16CurrentPinGlb);
-					EXTEEPROM_enuWrite(0x52,(uint8)(u16CurrentPinGlb>>8));
+					enuErrorStatGlb |= EXTEEPROM_enuWrite(0x51,(uint8)u16CurrentPinGlb);
+					enuErrorStatGlb |= EXTEEPROM_enuWrite(0x52,(uint8)(u16CurrentPinGlb>>8));
 
 					/*return to main display*/
 					enuCurrentSubDisplayGlb = APP_SUB_DISPLAY_MAIN;
@@ -1071,28 +1077,44 @@ static void APP_voidPinChangeSubUpdate(uint8 u8ButtonNumCpy)
 }
 
 
-void APP_voidLightOn(void)
+tenuErrorStatus APP_enuLightOn(void)
 {
+	tenuErrorStatus enuErrorStatLoc = E_OK;
+
 	strStatesGlb.u8LightState=1;
-	DIO_enuWritePinValue(DIO_PORTA, DIO_PIN2, DIO_HIGH);
+	enuErrorStatLoc |= DIO_enuWritePinValue(DIO_PORTA, DIO_PIN2, DIO_HIGH);
+
+	return enuErrorStatLoc;
 }
 
-void APP_voidLightOff(void)
+tenuErrorStatus APP_enuLightOff(void)
 {
+	tenuErrorStatus enuErrorStatLoc = E_OK;
+
 	strStatesGlb.u8LightState=0;
-	DIO_enuWritePinValue(DIO_PORTA, DIO_PIN2, DIO_LOW);
+	enuErrorStatLoc |= DIO_enuWritePinValue(DIO_PORTA, DIO_PIN2, DIO_LOW);
+
+	return enuErrorStatLoc;
 }
 
-void APP_voidFanOn(void)
+tenuErrorStatus APP_enuFanOn(void)
 {
+	tenuErrorStatus enuErrorStatLoc = E_OK;
+
 	strStatesGlb.u8FanState=1;
-	DIO_enuWritePinValue(DIO_PORTA, DIO_PIN3, DIO_HIGH);
+	enuErrorStatLoc |= DIO_enuWritePinValue(DIO_PORTA, DIO_PIN3, DIO_HIGH);
+
+	return enuErrorStatLoc;
 }
 
-void APP_voidFanOff(void)
+tenuErrorStatus APP_enuFanOff(void)
 {
+	tenuErrorStatus enuErrorStatLoc = E_OK;
+
 	strStatesGlb.u8FanState=0;
-	DIO_enuWritePinValue(DIO_PORTA, DIO_PIN3, DIO_LOW);
+	enuErrorStatLoc |= DIO_enuWritePinValue(DIO_PORTA, DIO_PIN3, DIO_LOW);
+
+	return enuErrorStatLoc;
 }
 
 void APP_voidBuzzerOn(void)
@@ -1105,8 +1127,12 @@ void APP_voidBuzzerOff(void)
 	strStatesGlb.u8BuzzerState = 0;
 }
 
-void APP_voidBuzzerToggle(void)
+tenuErrorStatus APP_enuBuzzerToggle(void)
 {
-	DIO_enuTogglePinValue(DIO_PORTA, DIO_PIN4);
+	tenuErrorStatus enuErrorStatLoc = E_OK;
+
+	enuErrorStatLoc |= DIO_enuTogglePinValue(DIO_PORTA, DIO_PIN4);
+
+	return enuErrorStatLoc;
 }
 /****************************************/

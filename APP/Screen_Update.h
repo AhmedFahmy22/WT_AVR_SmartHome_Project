@@ -16,7 +16,7 @@
 #define APP_SCREEN_UPDATE_H_
 
 /**********Function Declarations**********/
-void APP_voidScreenUpdate(void);
+tenuErrorStatus APP_enuScreenUpdate(void);
 
 void APP_voidDisplayTime(uint16 u16TimeCpy);
 /****************************************/
